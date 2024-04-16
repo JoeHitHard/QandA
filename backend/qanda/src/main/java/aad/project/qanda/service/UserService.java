@@ -1,32 +1,30 @@
 package aad.project.qanda.service;
 
 import aad.project.qanda.InvalidSessionException;
-import aad.project.qanda.connector.SessionConnector;
-import aad.project.qanda.connector.UserConnector;
+import aad.project.qanda.repository.SessionRepository;
+import aad.project.qanda.repository.UserRepository;
 import aad.project.qanda.entity.Session;
 import aad.project.qanda.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
-import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
 public class UserService {
     @Autowired
-    UserConnector userConnector;
+    UserRepository userRepository;
 
     @Autowired
-    SessionConnector sessionConnector;
+    SessionRepository sessionRepository;
 
     public Session login(String userName, String password) throws InvalidSessionException {
-        Optional<User> user = userConnector.findByUsername(userName);
+        Optional<User> user = userRepository.findByUsername(userName);
         if (user.isPresent()) {
             if (user.get().getPassword().equals(password)) {
                 Session Session = new Session(UUID.randomUUID().toString(), user.get());
-                sessionConnector.save(Session);
+                sessionRepository.save(Session);
                 return Session;
             }
             throw new InvalidSessionException("Userid " + userName + " password is not Correct");
@@ -35,7 +33,7 @@ public class UserService {
     }
 
     public Optional<User> getUser(String sessionId) throws InvalidSessionException {
-        Optional<Session> token = sessionConnector.findById(sessionId);
+        Optional<Session> token = sessionRepository.findById(sessionId);
         if (token.isPresent()) {
             return Optional.of(token.get().getUsername());
         }

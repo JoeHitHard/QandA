@@ -1,4 +1,4 @@
-package aad.project.ums.controller;
+package aad.project.qanda.controller;
 
 import aad.project.qanda.InvalidSessionException;
 import aad.project.qanda.service.UserService;

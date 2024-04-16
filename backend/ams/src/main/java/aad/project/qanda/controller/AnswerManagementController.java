@@ -1,7 +1,7 @@
-package aad.project.ums.controller;
+package aad.project.qanda.controller;
 
 import aad.project.qanda.InvalidSessionException;
-import aad.project.qanda.connector.AnswerConnector;
+import aad.project.qanda.repository.AnswerRepository;
 import aad.project.qanda.entity.Answer;
 import aad.project.qanda.entity.User;
 import aad.project.qanda.service.UserService;
@@ -19,7 +19,7 @@ import java.util.Optional;
 public class AnswerManagementController {
 
     @Autowired
-    private AnswerConnector answerConnector;
+    private AnswerRepository answerRepository;
 
     @Autowired
     private UserService userService;
@@ -33,31 +33,31 @@ public class AnswerManagementController {
         // Set current timestamp
         answer.setTimestamp(LocalDateTime.now());
         // Save the answer
-        Answer createdAnswer = answerConnector.save(answer);
+        Answer createdAnswer = answerRepository.save(answer);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdAnswer);
     }
 
     @GetMapping("/answers")
     public ResponseEntity<List<Answer>> getAllAnswers() {
-        List<Answer> answers = answerConnector.findAll();
+        List<Answer> answers = answerRepository.findAll();
         return ResponseEntity.ok(answers);
     }
 
     @GetMapping("/answers/{questionId}")
     public ResponseEntity<List<Answer>> getAnswersByQuestionId(@PathVariable String questionId) {
-        List<Answer> answers = answerConnector.findByQuestionQuestionId(questionId);
+        List<Answer> answers = answerRepository.findByQuestionQuestionId(questionId);
         return ResponseEntity.ok(answers);
     }
 
     @GetMapping("/answers/user/{userId}")
     public ResponseEntity<List<Answer>> getAnswersByUserId(@PathVariable String userId) {
-        List<Answer> answers = answerConnector.findByUserUserId(userId);
+        List<Answer> answers = answerRepository.findByUserUserId(userId);
         return ResponseEntity.ok(answers);
     }
 
     @GetMapping("/answers/{answerId}")
     public ResponseEntity<Answer> getAnswerById(@PathVariable String answerId) {
-        Optional<Answer> optionalAnswer = answerConnector.findById(answerId);
+        Optional<Answer> optionalAnswer = answerRepository.findById(answerId);
         if (optionalAnswer.isPresent()) {
             return ResponseEntity.ok(optionalAnswer.get());
         } else {
@@ -69,12 +69,12 @@ public class AnswerManagementController {
     public ResponseEntity<Answer> updateAnswer(@RequestHeader("Authorization") String authorizationHeader, @PathVariable String answerId, @RequestBody Answer answerDetails) throws InvalidSessionException {
         // Validate user session
         userService.validateUserSession(authorizationHeader);
-        Optional<Answer> optionalAnswer = answerConnector.findById(answerId);
+        Optional<Answer> optionalAnswer = answerRepository.findById(answerId);
         if (optionalAnswer.isPresent()) {
             Answer existingAnswer = optionalAnswer.get();
             existingAnswer.setAnswer(answerDetails.getAnswer());
             // Update other fields if necessary
-            Answer updatedAnswer = answerConnector.save(existingAnswer);
+            Answer updatedAnswer = answerRepository.save(existingAnswer);
             return ResponseEntity.ok(updatedAnswer);
         } else {
             return ResponseEntity.notFound().build();
@@ -85,9 +85,9 @@ public class AnswerManagementController {
     public ResponseEntity<Void> deleteAnswer(@RequestHeader("Authorization") String authorizationHeader, @PathVariable String answerId) throws InvalidSessionException {
         // Validate user session
         userService.validateUserSession(authorizationHeader);
-        Optional<Answer> optionalAnswer = answerConnector.findById(answerId);
+        Optional<Answer> optionalAnswer = answerRepository.findById(answerId);
         if (optionalAnswer.isPresent()) {
-            answerConnector.deleteById(answerId);
+            answerRepository.deleteById(answerId);
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();

@@ -1,4 +1,4 @@
-package aad.project.qanda.connector;
+package aad.project.qanda.repository;
 
 import aad.project.qanda.entity.Answer;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -8,7 +8,7 @@ import java.util.List;
 
 
 @Repository
-public interface AnswerConnector extends JpaRepository<Answer, String> {
+public interface AnswerRepository extends JpaRepository<Answer, String> {
     List<Answer> findByQuestionQuestionId(String questionId);
     List<Answer> findByUserUserId(String answerId);
 }

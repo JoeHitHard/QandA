@@ -1,7 +1,7 @@
-package aad.project.ums.controller;
+package aad.project.qanda.controller;
 
 import aad.project.qanda.InvalidSessionException;
-import aad.project.qanda.connector.QuestionConnector;
+import aad.project.qanda.repository.QuestionRepository;
 import aad.project.qanda.entity.Question;
 import aad.project.qanda.entity.User;
 import aad.project.qanda.service.UserService;
@@ -18,7 +18,7 @@ import java.util.Optional;
 public class QuestionManagementController {
 
     @Autowired
-    private QuestionConnector questionConnector;
+    private QuestionRepository questionRepository;
 
     @Autowired
     private UserService userService;
@@ -31,19 +31,19 @@ public class QuestionManagementController {
         // Set user ID to the question
         question.setUser(user);
         // Save the question
-        Question createdQuestion = questionConnector.save(question);
+        Question createdQuestion = questionRepository.save(question);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdQuestion);
     }
 
     @GetMapping("/questions")
     public ResponseEntity<List<Question>> getAllQuestions() {
-        List<Question> questions = questionConnector.findAll();
+        List<Question> questions = questionRepository.findAll();
         return ResponseEntity.ok(questions);
     }
 
     @GetMapping("/questions/{questionId}")
     public ResponseEntity<Question> getQuestionById(@PathVariable String questionId) {
-        Optional<Question> optionalQuestion = questionConnector.findById(questionId);
+        Optional<Question> optionalQuestion = questionRepository.findById(questionId);
         if (optionalQuestion.isPresent()) {
             return ResponseEntity.ok(optionalQuestion.get());
         } else {
@@ -53,7 +53,7 @@ public class QuestionManagementController {
 
     @GetMapping("/questions/user/{userId}")
     public ResponseEntity<List<Question>> getQuestionsByUserId(@PathVariable String userId) {
-        List<Question> questions = questionConnector.findByUserUserId(userId);
+        List<Question> questions = questionRepository.findByUserUserId(userId);
         return ResponseEntity.ok(questions);
     }
 
@@ -63,11 +63,11 @@ public class QuestionManagementController {
                                                    @RequestBody Question questionDetails) throws InvalidSessionException {
         // Validate user session
         userService.validateUserSession(authorizationHeader);
-        Optional<Question> optionalQuestion = questionConnector.findById(questionId);
+        Optional<Question> optionalQuestion = questionRepository.findById(questionId);
         if (optionalQuestion.isPresent()) {
             Question existingQuestion = optionalQuestion.get();
             existingQuestion.setQuestion(questionDetails.getQuestion());
-            Question updatedQuestion = questionConnector.save(existingQuestion);
+            Question updatedQuestion = questionRepository.save(existingQuestion);
             return ResponseEntity.ok(updatedQuestion);
         } else {
             return ResponseEntity.notFound().build();
@@ -79,9 +79,9 @@ public class QuestionManagementController {
                                                @PathVariable String questionId) throws InvalidSessionException {
         // Validate user session
         userService.validateUserSession(authorizationHeader);
-        Optional<Question> optionalQuestion = questionConnector.findById(questionId);
+        Optional<Question> optionalQuestion = questionRepository.findById(questionId);
         if (optionalQuestion.isPresent()) {
-            questionConnector.deleteById(questionId);
+            questionRepository.deleteById(questionId);
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();

@@ -1,4 +1,4 @@
-package aad.project.qanda.connector;
+package aad.project.qanda.repository;
 
 import aad.project.qanda.entity.Session;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface SessionConnector extends JpaRepository<Session, String> {
+public interface SessionRepository extends JpaRepository<Session, String> {
 }

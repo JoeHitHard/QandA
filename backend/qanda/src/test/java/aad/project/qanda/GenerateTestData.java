@@ -1,8 +1,8 @@
 package aad.project.qanda;
 
-import aad.project.qanda.connector.AnswerConnector;
-import aad.project.qanda.connector.QuestionConnector;
-import aad.project.qanda.connector.UserConnector;
+import aad.project.qanda.repository.AnswerRepository;
+import aad.project.qanda.repository.QuestionRepository;
+import aad.project.qanda.repository.UserRepository;
 import aad.project.qanda.entity.Answer;
 import aad.project.qanda.entity.Question;
 import aad.project.qanda.entity.User;
@@ -23,13 +23,13 @@ import static java.lang.System.exit;
 public class GenerateTestData implements CommandLineRunner {
 
     @Autowired
-    private UserConnector userConnector;
+    private UserRepository userRepository;
 
     @Autowired
-    private QuestionConnector questionConnector;
+    private QuestionRepository questionRepository;
 
     @Autowired
-    private AnswerConnector answerConnector;
+    private AnswerRepository answerRepository;
 
     static Random random = new Random();
 
@@ -42,9 +42,9 @@ public class GenerateTestData implements CommandLineRunner {
     public void run(String... args) throws Exception {
         Faker faker = new Faker();
 
-        answerConnector.deleteAll();
-        questionConnector.deleteAll();
-        userConnector.deleteAll();
+        answerRepository.deleteAll();
+        questionRepository.deleteAll();
+        userRepository.deleteAll();
 
         generateUsersData(faker);
 
@@ -58,7 +58,7 @@ public class GenerateTestData implements CommandLineRunner {
     }
 
     private void generateAnswerData(Faker faker) {
-        List<Question> questions = questionConnector.findAll();
+        List<Question> questions = questionRepository.findAll();
 
         // Generate test answers for each question
         for (Question question : questions) {
@@ -80,7 +80,7 @@ public class GenerateTestData implements CommandLineRunner {
                 answer.setQuestion(question);
 
                 // Save the answer to the database
-                answerConnector.save(answer);
+                answerRepository.save(answer);
             }
         }
         System.out.println("Test answer data generated successfully.");
@@ -106,7 +106,7 @@ public class GenerateTestData implements CommandLineRunner {
             question.setUser(user);
 
             // Save the question to the database
-            questionConnector.save(question);
+            questionRepository.save(question);
         }
         System.out.println("Test question data generated successfully.");
     }
@@ -115,7 +115,7 @@ public class GenerateTestData implements CommandLineRunner {
         User user = new User();
         user.setUsername("admin");
         user.setPassword("admin");
-        userConnector.save(user);
+        userRepository.save(user);
         // Generate 10 test users
         for (int i = 0; i < 9; i++) {
             String username = faker.name().username();
@@ -126,13 +126,13 @@ public class GenerateTestData implements CommandLineRunner {
             user.setPassword(password);
 
             // Save the user to the database
-            userConnector.save(user);
+            userRepository.save(user);
         }
         System.out.println("Test user data generated successfully.");
     }
 
     private User getRandomUser() {
-        List<User> users = userConnector.findAll();
+        List<User> users = userRepository.findAll();
         return users.get(random.nextInt(users.size()));
     }
 }
