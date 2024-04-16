@@ -22,6 +22,26 @@
             </builds>
           </compositeBuild>
         </compositeConfiguration>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/qms" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/qanda" />
+            <option value="$PROJECT_DIR$/qms" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <compositeConfiguration>
+          <compositeBuild compositeDefinitionSource="SCRIPT">
+            <builds>
+              <build path="$PROJECT_DIR$/qanda" name="qanda">
+                <projects>
+                  <project path="$PROJECT_DIR$/qanda" />
+                </projects>
+              </build>
+            </builds>
+          </compositeBuild>
+        </compositeConfiguration>
         <option name="externalProjectPath" value="$PROJECT_DIR$/ums" />
         <option name="modules">
           <set>
