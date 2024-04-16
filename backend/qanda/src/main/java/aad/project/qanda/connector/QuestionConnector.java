@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface QuestionConnector extends JpaRepository<Question, String> {
     List<Question> findByQuestionContaining(String keyWord);
+    List<Question> findByUserUserId(String userId);
 }

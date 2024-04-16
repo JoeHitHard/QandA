@@ -41,4 +41,12 @@ public class UserService {
         }
         throw new InvalidSessionException("Invalid Session ID");
     }
+
+    public User validateUserSession(String sessionId) throws InvalidSessionException {
+        Optional<User> user = getUser(sessionId);
+        if (user.isEmpty()) {
+            throw new InvalidSessionException("Invalid session");
+        }
+        return user.get();
+    }
 }

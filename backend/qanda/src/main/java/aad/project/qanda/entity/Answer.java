@@ -20,14 +20,26 @@ public class Answer {
     @ManyToOne
     private User user;
 
-    public Answer(String answerId, String answer, LocalDateTime timestamp, User user) {
+    @ManyToOne
+    private Question question;
+
+    public Answer(String answerId, String answer, LocalDateTime timestamp, User user, Question question) {
         this.answerId = answerId;
         this.answer = answer;
         this.timestamp = timestamp;
         this.user = user;
+        this.question = question;
     }
 
     public Answer() {
+    }
+
+    public Question getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
     }
 
     public String getAnswerId() {

@@ -27,7 +27,7 @@ public class QuestionManagementController {
     public ResponseEntity<Question> createQuestion(@RequestHeader("Authorization") String authorizationHeader,
                                                    @RequestBody Question question) throws InvalidSessionException {
         // Validate user session
-        User user = validateUserSession(authorizationHeader);
+        User user = userService.validateUserSession(authorizationHeader);
         // Set user ID to the question
         question.setUser(user);
         // Save the question
@@ -51,12 +51,18 @@ public class QuestionManagementController {
         }
     }
 
+    @GetMapping("/questions/user/{userId}")
+    public ResponseEntity<List<Question>> getQuestionsByUserId(@PathVariable String userId) {
+        List<Question> questions = questionConnector.findByUserUserId(userId);
+        return ResponseEntity.ok(questions);
+    }
+
     @PutMapping("/questions/{questionId}")
     public ResponseEntity<Question> updateQuestion(@RequestHeader("Authorization") String authorizationHeader,
                                                    @PathVariable String questionId,
                                                    @RequestBody Question questionDetails) throws InvalidSessionException {
         // Validate user session
-        validateUserSession(authorizationHeader);
+        userService.validateUserSession(authorizationHeader);
         Optional<Question> optionalQuestion = questionConnector.findById(questionId);
         if (optionalQuestion.isPresent()) {
             Question existingQuestion = optionalQuestion.get();
@@ -72,7 +78,7 @@ public class QuestionManagementController {
     public ResponseEntity<Void> deleteQuestion(@RequestHeader("Authorization") String authorizationHeader,
                                                @PathVariable String questionId) throws InvalidSessionException {
         // Validate user session
-        validateUserSession(authorizationHeader);
+        userService.validateUserSession(authorizationHeader);
         Optional<Question> optionalQuestion = questionConnector.findById(questionId);
         if (optionalQuestion.isPresent()) {
             questionConnector.deleteById(questionId);
@@ -82,12 +88,4 @@ public class QuestionManagementController {
         }
     }
 
-    // Helper method to validate user session
-    private User validateUserSession(String sessionId) throws InvalidSessionException {
-        Optional<User> user = userService.getUser(sessionId);
-        if (user.isEmpty()) {
-            throw new InvalidSessionException("Invalid session");
-        }
-        return user.get();
-    }
 }
