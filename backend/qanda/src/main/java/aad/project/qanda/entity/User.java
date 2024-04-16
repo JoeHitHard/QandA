@@ -26,6 +26,9 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Answer> answers;
 
+    @OneToMany(mappedBy = "username", cascade = CascadeType.ALL)
+    private List<Session> sessions;
+
     public User(String userId, String username, String password) {
         this.userId = userId;
         this.username = username;

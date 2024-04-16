@@ -9,9 +9,6 @@ import java.util.UUID;
 @Table(name = "sessions")
 public class Session {
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    @Column(columnDefinition = "VARCHAR(36)")
     private String sessionId;
 
     @ManyToOne

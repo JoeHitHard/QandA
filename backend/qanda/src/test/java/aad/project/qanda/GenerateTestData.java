@@ -42,9 +42,7 @@ public class GenerateTestData implements CommandLineRunner {
     public void run(String... args) throws Exception {
         Faker faker = new Faker();
 
-        answerRepository.deleteAll();
-        questionRepository.deleteAll();
-        userRepository.deleteAll();
+        clearDb();
 
         generateUsersData(faker);
 
@@ -52,9 +50,15 @@ public class GenerateTestData implements CommandLineRunner {
 
         generateAnswerData(faker);
 
-        Thread.sleep(30000);
+    }
 
-        exit(0);
+    private void clearDb() {
+        answerRepository.deleteAll();
+        answerRepository.flush();
+        questionRepository.deleteAll();
+        questionRepository.flush();
+        userRepository.deleteAll();
+        userRepository.flush();
     }
 
     private void generateAnswerData(Faker faker) {
@@ -81,6 +85,7 @@ public class GenerateTestData implements CommandLineRunner {
 
                 // Save the answer to the database
                 answerRepository.save(answer);
+                answerRepository.flush();
             }
         }
         System.out.println("Test answer data generated successfully.");
@@ -107,6 +112,7 @@ public class GenerateTestData implements CommandLineRunner {
 
             // Save the question to the database
             questionRepository.save(question);
+            questionRepository.flush();
         }
         System.out.println("Test question data generated successfully.");
     }
@@ -127,6 +133,7 @@ public class GenerateTestData implements CommandLineRunner {
 
             // Save the user to the database
             userRepository.save(user);
+            userRepository.flush();
         }
         System.out.println("Test user data generated successfully.");
     }

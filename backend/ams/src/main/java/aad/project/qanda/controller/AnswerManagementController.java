@@ -1,9 +1,11 @@
 package aad.project.qanda.controller;
 
 import aad.project.qanda.InvalidSessionException;
+import aad.project.qanda.entity.Question;
 import aad.project.qanda.repository.AnswerRepository;
 import aad.project.qanda.entity.Answer;
 import aad.project.qanda.entity.User;
+import aad.project.qanda.repository.QuestionRepository;
 import aad.project.qanda.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,12 +24,20 @@ public class AnswerManagementController {
     private AnswerRepository answerRepository;
 
     @Autowired
+    private QuestionRepository questionRepository;
+
+    @Autowired
     private UserService userService;
 
-    @PostMapping("/answers")
-    public ResponseEntity<Answer> createAnswer(@RequestHeader("Authorization") String authorizationHeader, @RequestBody Answer answer) throws InvalidSessionException {
+    @PostMapping("/answers/{questionId}")
+    public ResponseEntity<Answer> createAnswer(@PathVariable String questionId, @RequestHeader("Authorization") String authorizationHeader, @RequestBody Answer answer) throws InvalidSessionException {
         // Validate user session
         User user = userService.validateUserSession(authorizationHeader);
+        Optional<Question> byId = questionRepository.findById(questionId);
+        if (byId.isEmpty()) {
+            throw new RuntimeException("Question not found");
+        }
+        answer.setQuestion(byId.get());
         // Set user ID to the answer
         answer.setUser(user);
         // Set current timestamp
@@ -43,7 +53,7 @@ public class AnswerManagementController {
         return ResponseEntity.ok(answers);
     }
 
-    @GetMapping("/answers/{questionId}")
+    @GetMapping("/answers/question/{questionId}")
     public ResponseEntity<List<Answer>> getAnswersByQuestionId(@PathVariable String questionId) {
         List<Answer> answers = answerRepository.findByQuestionQuestionId(questionId);
         return ResponseEntity.ok(answers);
@@ -51,6 +61,10 @@ public class AnswerManagementController {
 
     @GetMapping("/answers/user/{userId}")
     public ResponseEntity<List<Answer>> getAnswersByUserId(@PathVariable String userId) {
+        if (userId.equals("all")) {
+            List<Answer> answers = answerRepository.findAll();
+            return ResponseEntity.ok(answers);
+        }
         List<Answer> answers = answerRepository.findByUserUserId(userId);
         return ResponseEntity.ok(answers);
     }

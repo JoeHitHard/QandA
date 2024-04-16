@@ -1,0 +1,35 @@
+.home-container {
+    padding: 20px;
+    background-color: #f4f4f4; /* Light background color */
+    color: #333; /* Dark text color */
+}
+
+.section {
+    margin-bottom: 30px;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.table th,
+.table td {
+    padding: 8px;
+    border: 1px solid #888; /* Lighter border color */
+    background-color: #fff; /* White background color */
+    color: #333; /* Dark text color */
+}
+
+.table th {
+    background-color: #4CAF50; /* Green header background color */
+    color: #fff; /* Light text color */
+}
+
+.table tbody tr:nth-child(even) {
+    background-color: #f4f4f4; /* Light background color */
+}
+
+.table tbody tr:hover {
+    background-color: #e0e0e0; /* Lighter background color on hover */
+}

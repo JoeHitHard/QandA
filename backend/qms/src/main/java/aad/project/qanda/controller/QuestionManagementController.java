@@ -1,6 +1,8 @@
 package aad.project.qanda.controller;
 
 import aad.project.qanda.InvalidSessionException;
+import aad.project.qanda.entity.Answer;
+import aad.project.qanda.repository.AnswerRepository;
 import aad.project.qanda.repository.QuestionRepository;
 import aad.project.qanda.entity.Question;
 import aad.project.qanda.entity.User;
@@ -19,6 +21,9 @@ public class QuestionManagementController {
 
     @Autowired
     private QuestionRepository questionRepository;
+
+    @Autowired
+    private AnswerRepository answerRepository;
 
     @Autowired
     private UserService userService;
@@ -79,6 +84,11 @@ public class QuestionManagementController {
                                                @PathVariable String questionId) throws InvalidSessionException {
         // Validate user session
         userService.validateUserSession(authorizationHeader);
+        List<Answer> byQuestionQuestionId = answerRepository.findByQuestionQuestionId(questionId);
+        for (Answer answer : byQuestionQuestionId) {
+            answerRepository.delete(answer);
+        }
+        answerRepository.flush();
         Optional<Question> optionalQuestion = questionRepository.findById(questionId);
         if (optionalQuestion.isPresent()) {
             questionRepository.deleteById(questionId);

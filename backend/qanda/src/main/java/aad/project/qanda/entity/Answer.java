@@ -20,10 +20,10 @@ public class Answer {
 
     private LocalDateTime timestamp;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private User user;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Question question;
 
     public Answer(String answerId, String answer, LocalDateTime timestamp, User user, Question question) {
