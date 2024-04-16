@@ -51,11 +51,11 @@ function Home({ setIsLoggedIn }) {
             <div className='home-container'>
                 <div className='section'>
                     <h1>My Questions</h1>
-                    {<QuestionsView questions={questions}/>}
+                    {<QuestionsView questions={questions} fetchData={fetchData}/>}
                 </div>
                 <div className='section'>
                     <h1>My Answers</h1>
-                    {<AnswersView answers={answers}/>}
+                    {<AnswersView answers={answers} fetchData={fetchData}/>}
                 </div>
             </div>
         </div>

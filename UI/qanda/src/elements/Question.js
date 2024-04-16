@@ -38,7 +38,7 @@ function Question() {
       )}
       <div>
         <h2>Answers:</h2>
-        <AnswersView answers={answers} currentQuestionId={questionId}/>
+        <AnswersView answers={answers} currentQuestionId={questionId} fetchData={fetchQuestionAndAnswers}/>
         </div>
     </div>
   );
