@@ -28,6 +28,7 @@ function QuestionsView({ questions }) {
                 }
             });
             console.log('Question added successfully:', response.data);
+            window.location.reload();
         } catch (error) {
             // Handle error
             console.error('Error adding question:', error);

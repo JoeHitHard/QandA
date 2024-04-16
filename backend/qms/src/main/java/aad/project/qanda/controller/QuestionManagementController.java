@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -58,6 +59,10 @@ public class QuestionManagementController {
 
     @GetMapping("/questions/user/{userId}")
     public ResponseEntity<List<Question>> getQuestionsByUserId(@PathVariable String userId) {
+        if (Objects.equals(userId, "all")) {
+            List<Question> questions = questionRepository.findAll();
+            return ResponseEntity.ok(questions);
+        }
         List<Question> questions = questionRepository.findByUserUserId(userId);
         return ResponseEntity.ok(questions);
     }
