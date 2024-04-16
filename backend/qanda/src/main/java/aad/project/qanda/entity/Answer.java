@@ -1,15 +1,18 @@
 package aad.project.qanda.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
+@Table(name = "answers")
 public class Answer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(generator = "uuid2")
+    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(columnDefinition = "VARCHAR(36)")
     private String answerId;
 
@@ -17,10 +20,10 @@ public class Answer {
 
     private LocalDateTime timestamp;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private User user;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private Question question;
 
     public Answer(String answerId, String answer, LocalDateTime timestamp, User user, Question question) {

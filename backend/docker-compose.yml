@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  ums:
+    build:
+      context: ./ums
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    ports:
+      - "8081:8081"
+    networks:
+      - qanda-network
+
+  qms:
+    build:
+      context: ./qms
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    ports:
+      - "8082:8082"
+    networks:
+      - qanda-network
+
+  ams:
+    build:
+      context: ./ams
+      dockerfile: Dockerfile
+    depends_on:
+      - postgres
+    ports:
+      - "8083:8083"
+    networks:
+      - qanda-network
+
+  postgres:
+    build: .
+    image: postgres
+    container_name: postgresdb
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    networks:
+      - qanda-network
+
+networks:
+  qanda-network:
+    driver: bridge
